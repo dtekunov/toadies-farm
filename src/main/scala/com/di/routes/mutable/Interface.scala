@@ -88,7 +88,7 @@ trait Interface {
             (name, rawMode, isCannibal) =>
               validateMode(rawMode) match {
                 case Some(mode) =>
-                  val farm = Farm(UUID.randomUUID().toString, name, mode.name, isCannibal)
+                  val farm = Farm(UUID.randomUUID().toString, name, mode.name, isCannibal, 1)
                   onComplete(db.getFarmByName(farm.name)) {
                     case Success(None) =>
                       onComplete(db.insertSingleFarm(farm)) {
@@ -110,7 +110,7 @@ trait Interface {
                     case Success(Some(_)) => farmAlreadyExistsResponse(farm.name)
                     case Failure(ex) => internalServerError(ex.getMessage)
                   }
-                case None => invalidModeProvidedResponse(rawMode)
+                case None => invalidParameterProvidedResponse(rawMode)
               }
           }
         } ~

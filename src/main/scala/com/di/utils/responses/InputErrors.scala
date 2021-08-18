@@ -5,11 +5,8 @@ import akka.http.scaladsl.server.StandardRoute
 
 trait InputErrors extends BaseHttp {
 
-  def invalidModeProvidedResponse(mode: String): StandardRoute =
-    complete(badRequestResponse(s"Invalid mode parameter provided: $mode"))
-
-  def invalidIdProvidedResponse(id: String): StandardRoute =
-    complete(badRequestResponse(s"Invalid id parameter provided: $id"))
+  def invalidParameterProvidedResponse(parameter: String): StandardRoute =
+    complete(badRequestResponse(s"Invalid parameter provided: $parameter"))
 
   def authFailedResp: StandardRoute =
     complete(expectationFailed("Auth failed"))

@@ -1,7 +1,7 @@
 package com.di
 
 import akka.actor.typed.ActorSystem
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import com.di.actors.FarmActor
@@ -9,11 +9,8 @@ import com.di.actors.FarmActor
 import scala.util.Failure
 import scala.util.Success
 
-//#main-class
 object Entrypoint {
-  //#start-http-server
   private def startHttpServer(routes: Route)(implicit system: ActorSystem[_]): Unit = {
-    // Akka HTTP still needs a classic ActorSystem to start
     import system.executionContext
 
     val futureBinding = Http().newServerAt(
@@ -28,9 +25,7 @@ object Entrypoint {
         system.terminate()
     }
   }
-  //#start-http-server
   def main(args: Array[String]): Unit = {
-    //#server-bootstrapping
     val rootBehavior = Behaviors.setup[Nothing] { context =>
       val farmActor = context.spawn(FarmActor(None, None), "FarmActor")
       context.watch(farmActor)
@@ -40,7 +35,5 @@ object Entrypoint {
       Behaviors.empty
     }
     val system = ActorSystem[Nothing](rootBehavior, "AkkaHttpServer")
-    //#server-bootstrapping
   }
 }
-//#main-class

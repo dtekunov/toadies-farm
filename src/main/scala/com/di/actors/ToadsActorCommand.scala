@@ -19,6 +19,9 @@ final case class BornRandom(system: ActorSystem[_],
 final case class GetAllToads(system: ActorSystem[_],
                              replyTo: ActorRef[ToadsActorResponse]) extends ToadsActorCommand
 
+final case class RemoveDeadBodies(system: ActorSystem[_],
+                                  replyTo: ActorRef[ToadsActorResponse]) extends ToadsActorCommand
+
 final case class KillToadById(id: String,
                               system: ActorSystem[_],
                               replyTo: ActorRef[ToadsActorResponse]) extends ToadsActorCommand
@@ -26,6 +29,11 @@ final case class KillToadById(id: String,
 final case class GetToadById(id: String,
                              system: ActorSystem[_],
                              replyTo: ActorRef[ToadsActorResponse]) extends ToadsActorCommand
+
+final case class UpdateToad(oldToad: Toad,
+                            newToad: Toad,
+                            system: ActorSystem[_],
+                            replyTo: ActorRef[ToadsActorResponse]) extends ToadsActorCommand
 
 final case class UpdateToadsState(stopAt: BigInt,
                                   system: ActorSystem[_]) extends ToadsActorCommand

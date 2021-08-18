@@ -7,11 +7,17 @@ package object names {
     "Lepidobatrachus laevis"
   )
 
-  lazy final val NAMES = Vector(
+  lazy final val MALE_NAMES = Vector(
     "Adam",
     "Abraham",
     "James",
     "John"
+  )
+
+  lazy final val FEMALE_NAMES = Vector(
+    "Jane",
+    "Sofi",
+    "Ann"
   )
 
   lazy final val RARITY: Vector[(String, Double)] = Vector(
@@ -27,14 +33,16 @@ package object names {
     "green"
   )
 
-  lazy final val MUTATIONS = Map(
-    "three-legged" -> 0.1
-  )
-
   lazy final val DEATHS = Vector(
     "was smashed by a rock ",
     "*accidentally* fell off the roof",
     "was thunderstruck"
+  )
+
+  lazy final val FOOD_LIST = Map(
+    "bug" -> 3,
+    "spider" -> 5,
+    "worm" -> 10
   )
 
 }

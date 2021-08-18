@@ -1,8 +1,5 @@
 package com.di.domain
 
-import org.json4s.FullTypeHints
-import org.json4s.jackson.Serialization
-
 import java.util.UUID
 
 case class Owner(id: String,

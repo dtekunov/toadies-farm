@@ -1,7 +1,7 @@
 package com.di.jsonFormatters
 
-import com.di.domain.{DeadToad, Farm, GrownToad, Owner, Tadpole, Toad}
-import com.di.toadsArithmetics.ToadsGrouped
+import com.di.domain.{DeadToad, Farm, GrownToad, Owner, PregnantToad, Tadpole, Toad}
+import com.di.toadsArithmetics.{ToadsCount, ToadsGrouped}
 import org.json4s.jackson.JsonMethods.{compact, pretty, render}
 import org.json4s.jackson.Serialization
 import org.json4s._
@@ -22,9 +22,11 @@ object JsonWriter {
       s"""
         "tadpoles": ${formatTadpolesSeq(toadsGrouped.tadpoles)},
         "grown_toads": ${formatGrownToadsSeq(toadsGrouped.grownToads)},
-        "dead_toads": ${formatDeadToadsSeq(toadsGrouped.deadToads)}
+        "dead_toads": ${formatDeadToadsSeq(toadsGrouped.deadToads)},
+        "pregnant_toads": ${formatPregnantToadsSeq(toadsGrouped.pregnantToads)}
       """
 
+    case result: ToadsCount => write(result)
     case result: Owner => write(result)
     case result: GrownToad => write(result)
     case result: Tadpole => write(result)
@@ -69,6 +71,15 @@ object JsonWriter {
 
   def formatDeadToadsSeq(toTransform: Seq[DeadToad]): String = {
     implicit val formats = Serialization.formats(FullTypeHints(List(classOf[DeadToad])))
+
+    pretty(render(Extraction.decompose(toTransform)).removeField {
+      case ("jsonClass", _) => true
+      case _ => false
+    })
+  }
+
+  def formatPregnantToadsSeq(toTransform: Seq[PregnantToad]): String = {
+    implicit val formats = Serialization.formats(FullTypeHints(List(classOf[PregnantToad])))
 
     pretty(render(Extraction.decompose(toTransform)).removeField {
       case ("jsonClass", _) => true

@@ -1,12 +1,12 @@
 package com.di.db
 
-import com.di.domain.{DeadToad, Farm, GrownToad, Owner, Tadpole, Toad}
+import com.di.domain.{DeadToad, Farm, GrownToad, Owner, Stats, Tadpole, Toad}
 import com.di.jsonFormatters.FormatDoc
 import com.mongodb.client.result.DeleteResult
 import com.typesafe.config.Config
 import org.mongodb.scala.{Completed, Document, MongoClient, MongoCollection, MongoDatabase}
 import org.mongodb.scala.model.Filters.{and, equal}
-import org.mongodb.scala.model.Updates.set
+import org.mongodb.scala.model.Updates.{combine, set}
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
 import org.mongodb.scala._
 
@@ -35,14 +35,39 @@ class MongoFarmsConnector(url: String, dbName: String)(implicit ec: ExecutionCon
   private val ownerCollection: MongoCollection[Document] =
     database.getCollection("owner")
 
+  private val statsCollection: MongoCollection[Document] =
+    database.getCollection("stats")
+
   def insertSingleFarm(farm: Farm): Future[Option[Completed]] = {
     val docToInsert = Document(
       Farm.idDbName -> farm.id,
       Farm.nameDbName -> farm.name,
       Farm.modeDbName -> farm.mode,
-      Farm.isCannibalDbName -> farm.isCannibal)
+      Farm.isCannibalDbName -> farm.isCannibal,
+      Farm.mutationsModifierDbName -> farm.mutationsModifier)
 
     farmsCollection.insertOne(docToInsert).toFutureOption()
+  }
+
+  def insertSingleStats(stat: Stats): Future[Option[Completed]] = {
+    val docToInsert = Document(
+      Stats.farmNameDb -> stat.farmName,
+      Stats.totalToadsDb -> stat.totalToads,
+      Stats.toadsDiedDb -> stat.toadsDied)
+
+    statsCollection.insertOne(docToInsert).toFutureOption()
+  }
+
+  def insertManyStats(stats: Vector[Stats]): Future[Option[Completed]] = {
+    val docsToInsert = stats.map { stat =>
+      Document(
+        Stats.farmNameDb -> stat.farmName,
+        Stats.totalToadsDb -> stat.totalToads,
+        Stats.toadsDiedDb -> stat.toadsDied
+      )
+    }
+
+    statsCollection.insertMany(docsToInsert).toFutureOption()
   }
 
   def insertSingleOwner(owner: Owner): Future[Option[Completed]] = {
@@ -63,11 +88,21 @@ class MongoFarmsConnector(url: String, dbName: String)(implicit ec: ExecutionCon
       set(Farm.nameDbName, newName)
     ).toFutureOption()
 
+  def updateStats(newStats: Stats): Future[Option[UpdateResult]] =
+    statsCollection.updateOne(
+      equal(Stats.farmNameDb, newStats.farmName),
+      combine(set(Stats.totalToadsDb, newStats.totalToads),
+      set(Stats.toadsDiedDb, newStats.toadsDied))
+    ).toFutureOption()
+
   def getAllFarms: Future[Seq[Document]] =
     farmsCollection.find().toFuture()
 
   def getAllOwners: Future[Seq[Document]] =
     ownerCollection.find().toFuture()
+
+  def getAllStats: Future[Seq[Document]] =
+    statsCollection.find().toFuture()
 
   def getAllToadsFromDb: Future[Seq[Document]] = for {
     grownToads <- grownToadsCollection.find().toFuture()
@@ -91,6 +126,9 @@ class MongoFarmsConnector(url: String, dbName: String)(implicit ec: ExecutionCon
       toads.toVector
     }
   }
+
+  private def getStatsByFarmName(farmName: String) =
+    statsCollection.find(equal(Stats.farmNameDb, farmName)).toFuture().map(_.headOption)
 
   private def getAllGrownToadsByFarm(farmName: String): Future[Seq[Document]] =
     grownToadsCollection.find(equal(GrownToad.farmNameDb, farmName)).toFuture()

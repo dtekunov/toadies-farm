@@ -5,6 +5,7 @@ import com.di.actors._
 import akka.actor.typed.{ActorRef, ActorSystem}
 import akka.util.Timeout
 import akka.actor.typed.scaladsl.AskPattern._
+import com.di.domain.Toad
 import com.di.jsonFormatters.rawdataFormats.RawGrownToad
 
 import scala.concurrent.duration.DurationInt
@@ -24,6 +25,12 @@ trait CreativeActionsActorCommands {
                   timeout: Timeout): Future[ToadsActorResponse] =
     toadsActor.ask(GetToadById(id, system, _))
 
+  def updateToad(toadsActor: ActorRef[ToadsActorCommand], oldToad: Toad, newToad: Toad)
+                (implicit system: ActorSystem[_],
+                 ec: ExecutionContext,
+                 timeout: Timeout): Future[ToadsActorResponse] =
+    toadsActor.ask(UpdateToad(oldToad, newToad, system, _))
+
   def getOwnerInfo(farmActor: ActorRef[FarmActorCommand])
                   (implicit system: ActorSystem[_],
                    ec: ExecutionContext,
@@ -34,7 +41,7 @@ trait CreativeActionsActorCommands {
                 (implicit system: ActorSystem[_],
                  ec: ExecutionContext,
                  timeout: Timeout): Future[FarmActorActionPerformed] =
-    farmActor.ask(StartCycle(1.second, 1000, ec, system, _)) //todo: params up
+    farmActor.ask(StartCycle(1.seconds, 1000, ec, system, _)) //todo: params up
 
   def stopCycle(farmActor: ActorRef[FarmActorCommand])
                (implicit system: ActorSystem[_],
@@ -59,4 +66,10 @@ trait CreativeActionsActorCommands {
                   ec: ExecutionContext,
                   timeout: Timeout): Future[ToadsActorResponse] =
     toadsActor.ask(GetAllToads(system, _))
+
+  def removeDeadBodies(toadsActor: ActorRef[ToadsActorCommand])
+                      (implicit system: ActorSystem[_],
+                       ec: ExecutionContext,
+                       timeout: Timeout): Future[ToadsActorResponse] =
+    toadsActor.ask(RemoveDeadBodies(system, _))
 }

@@ -1,6 +1,7 @@
 package com.di.jsonFormatters.rawdataFormats
 
 import com.di.domain.GrownToad
+import com.di.types.{Hunger, PollutionLevel, Rarity}
 
 import java.util.UUID
 
@@ -28,7 +29,7 @@ case class RawGrownToad(name: String,
                         mutations: Vector[String],
                         pollution_level: Option[Int],
                         fertility: Boolean) extends RawToad {
-  def toGrownToad(farmName: String): GrownToad =
+  def toGrownToad(farmName: String): GrownToad = {
     GrownToad(
       UUID.randomUUID().toString,
       farmName,
@@ -37,13 +38,15 @@ case class RawGrownToad(name: String,
       is_male,
       age,
       is_cannibal,
-      rarity,
+      Rarity(rarity),
       color,
       disease_status,
       mutations,
-      pollution_level,
-      fertility
+      PollutionLevel(pollution_level),
+      fertility,
+      Hunger(0)
   )
+  }
 }
 
 case class RawTadpole(name: String,
