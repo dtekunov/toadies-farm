@@ -37,11 +37,14 @@ class Routes(context: ActorContext[_], farmRegistry: ActorRef[FarmActorCommand])
           case _ => noFarmIsInUseResp()
         }
       } ~
-      pathPrefix("service") {
+      pathPrefix("help") {
         complete("TODO")
       } ~
       pathPrefix("debug") {
         DebugRoute(db, farmRegistry)(system, ec)
+      } ~
+      pathEndOrSingleSlash {
+        complete("You can use .../help for help")
       }
   }
 }

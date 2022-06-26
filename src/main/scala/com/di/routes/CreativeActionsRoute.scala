@@ -145,14 +145,16 @@ object CreativeActionsRoute extends ToadsArithmetics with CreativeActionsActorCo
 
                   case Failure(ex) => internalServerError(ex.getMessage)
                 }
-              } ~ pathPrefix("stop-cycle") {
+              } ~
+                pathPrefix("stop-cycle") {
                 onComplete(stopCycle(farmRegistry)) {
                   case Success(_) =>
                     cycleStoppedResp()
 
                   case Failure(ex) => internalServerError(ex.getMessage)
                 }
-              } ~ pathPrefix("add-grown-toad") {
+              } ~
+                pathPrefix("add-grown-toad") {
                 onComplete(extractRequestEntityAsString(req)(system)) {
                   case Success(rawToad) =>
                     rawStringToRawGrownToad(rawToad) match {
@@ -165,7 +167,8 @@ object CreativeActionsRoute extends ToadsArithmetics with CreativeActionsActorCo
                     }
                   case Failure(ex) => internalServerError(ex.getMessage)
                 }
-              } ~ pathPrefix("born-random-toad") {
+              } ~
+                pathPrefix("born-random-toad") {
                 onComplete(bornRandom(toadsActor)) {
                   case Success(res) => res match {
                     case response: DefaultToadsActorResponse if response.result.nonEmpty =>
@@ -176,7 +179,8 @@ object CreativeActionsRoute extends ToadsArithmetics with CreativeActionsActorCo
                   }
                   case Failure(ex) => internalServerError(ex.getMessage)
                 }
-              } ~ pathPrefix("save") {
+              } ~
+                pathPrefix("save") {
                 complete("TODO")
               }
             }
@@ -193,7 +197,8 @@ object CreativeActionsRoute extends ToadsArithmetics with CreativeActionsActorCo
                   case None => invalidParameterProvidedResponse(maybeId)
                 }
               }
-            } ~ pathPrefix("remove-dead-bodies") {
+            } ~
+              pathPrefix("remove-dead-bodies") {
               onComplete(removeDeadBodies(toadsActor)) {
                 case Success(_) => deadBodiesRemoved
                 case Failure(ex) => internalServerError(ex.getMessage)

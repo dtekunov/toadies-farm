@@ -82,8 +82,8 @@ trait Interface {
           }
         }
     } ~
-      post {
-        pathPrefix("new-farm") {
+    post {
+      pathPrefix("new-farm") {
           parameters("name".as[String], "mode".as[String], "is_cannibal".as[Boolean]) { //TODO: validate mode and name
             (name, rawMode, isCannibal) =>
               validateMode(rawMode) match {
@@ -114,7 +114,7 @@ trait Interface {
               }
           }
         } ~
-          pathPrefix("stop-using-farm") {
+        pathPrefix("stop-using-farm") {
             parameter("name".as[String]) { name =>
               onComplete(db.getFarmByName(name)) {
                 case Success(Some(_)) =>
@@ -138,8 +138,8 @@ trait Interface {
             }
           }
       } ~
-      delete {
-        pathPrefix("delete-farm") {
+    delete {
+      pathPrefix("delete-farm") {
           parameter("name".as[String]) { name => //TODO: validate name
             onComplete(db.getFarmByName(name)) {
               case Success(Some(_)) =>
