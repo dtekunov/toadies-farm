@@ -9,7 +9,7 @@ import com.di.actors.FarmActor
 import scala.util.Failure
 import scala.util.Success
 
-object Entrypoint {
+object Main {
   private def startHttpServer(routes: Route)(implicit system: ActorSystem[_]): Unit = {
     import system.executionContext
 

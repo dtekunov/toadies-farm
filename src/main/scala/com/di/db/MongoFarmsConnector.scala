@@ -13,6 +13,9 @@ import org.mongodb.scala._
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{ExecutionContext, Future}
 
+/**
+ * All database-based operations provided here
+ */
 class MongoFarmsConnector(url: String, dbName: String)(implicit ec: ExecutionContext) {
 
   private val mongoClient: MongoClient = MongoClient(url)

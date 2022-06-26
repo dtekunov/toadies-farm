@@ -9,6 +9,11 @@ import com.di.random.{bornRandomTadpoleRND, getRandomElement, getRandomToad}
 
 import scala.util.{Failure, Success}
 
+/**
+ * Holds information about all toads during simulation
+ *
+ * Performs all operations, that affect toads
+ */
 object ToadsActor extends ToadsActorLogic {
 
   def apply(farm: Farm,
@@ -28,6 +33,9 @@ object ToadsActor extends ToadsActorLogic {
         replyTo ! DefaultToadsActorResponse(s"Toad ${toad.name} added", None)
         registry(farm, toads :+ toad, owner, numberOfCycles)
 
+      /**
+       * Converts toad to a dead one
+       */
       case KillToadById(id, system, replyTo) =>
         toads.find(toad => toad.id == id) match {
           case Some(toad) =>
@@ -53,18 +61,24 @@ object ToadsActor extends ToadsActorLogic {
 //            registry(farm, toads, owner, numberOfCycles)
 //        }
 
+      /**
+       * Returns a toad by its ID
+       */
       case GetToadById(id, _, replyTo) =>
         val maybeToad = toads.find(toad => toad.id == id)
         replyTo ! SingleToadResponse(maybeToad)
         registry(farm, toads, owner, numberOfCycles)
 
+      /**
+       * Replaces toad with an updated one
+       */
       case UpdateToad(oldToad, newToad, _, replyTo) =>
         val filteredToads = toads.filter(toad => toad.id != oldToad.id) //todo: test
         replyTo ! DefaultToadsActorResponse("Filtering performed", None)
         registry(farm, filteredToads :+ newToad, owner, numberOfCycles)
 
       /**
-       *
+       * Adds new tadpole to a farm
        */
       case BornRandom(system, replyTo) =>
         bornRandomTadpoleRND(farm.name) match {
@@ -97,12 +111,12 @@ object ToadsActor extends ToadsActorLogic {
         registry(farm, filteredToads, owner, numberOfCycles)
 
       /**
-       *
+       * Performs an update of toads statuses after time cycle
        */
       case UpdateToadsState(stopAt, ctx) =>
         if (numberOfCycles < stopAt) {
           val hungryToadsWithUpdatedAge = updateToadsAgeAndHunger(toads)
-          val hungryToads = hungerCycle(hungryToadsWithUpdatedAge, farm)
+          val hungryToads = calculateHungryToadsByFarmType(hungryToadsWithUpdatedAge, farm)
 
           hungryToads.hungryNonCannibals.foreach(toad => ctx.log.info(s" Toad ${toad.name} is hungry"))
 

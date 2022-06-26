@@ -1,5 +1,8 @@
 package com.di
 
+/**
+ * All constant values provided here due to the small size of data.
+ */
 package object names {
 
   //todo: finalize

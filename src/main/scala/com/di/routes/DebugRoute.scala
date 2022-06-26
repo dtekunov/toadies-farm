@@ -16,6 +16,11 @@ import com.typesafe.config.Config
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
+/**
+ * Holds all only-admin available operations
+ *
+ * Requires authorization to operate
+ */
 object DebugRoute {
 
   def apply(db: MongoFarmsConnector, farmRegistry: ActorRef[FarmActorCommand])

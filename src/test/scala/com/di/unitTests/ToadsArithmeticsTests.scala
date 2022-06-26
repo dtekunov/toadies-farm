@@ -22,8 +22,8 @@ class ToadsArithmeticsTests extends AnyWordSpecLike with ToadsActorLogic {
 
       countPollutionLevelBasedOnDeadBodies(0L) shouldBe 0L
 
-      hungerCycle(noToads, someCannibalFarm).hungryCannibals shouldBe Some(Vector.empty[Toad])
-      hungerCycle(noToads, someNonCannibalFarm).hungryCannibals shouldBe None
+      calculateHungryToadsByFarmType(noToads, someCannibalFarm).hungryCannibals shouldBe Some(Vector.empty[Toad])
+      calculateHungryToadsByFarmType(noToads, someNonCannibalFarm).hungryCannibals shouldBe None
 
       updateToadsPollutionLevel(noToads, 10) shouldBe Vector.empty[Toad]
 

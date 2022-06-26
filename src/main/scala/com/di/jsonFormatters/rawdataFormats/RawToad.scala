@@ -5,6 +5,9 @@ import com.di.types.{Hunger, PollutionLevel, Rarity}
 
 import java.util.UUID
 
+/**
+ * Raw toad info to convert from json to actual data format
+ */
 trait RawToad {
   val name: String
   val breed: String

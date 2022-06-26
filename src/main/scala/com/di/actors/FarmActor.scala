@@ -13,8 +13,6 @@ import java.util.UUID
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{ExecutionContext, Future}
 
-case class FarmNotCreatedException(ex: String) extends Exception(ex)
-
 object FarmActor {
 
   def apply(farm: Option[Farm], owner: Option[Owner]): Behavior[FarmActorCommand] =
@@ -88,3 +86,5 @@ object FarmActor {
   }
 
 }
+
+case class FarmNotCreatedException(ex: String) extends Exception(ex)

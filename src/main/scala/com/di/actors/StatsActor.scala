@@ -11,6 +11,11 @@ import scala.collection.immutable.HashMap
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
+/**
+ * TODO
+ *
+ * Calculates statistics of the farm that can be viewed through metrics
+ */
 object StatsActor {
 
   def apply(farmStats: Vector[Stats]): Behavior[StatsActorCommand] =

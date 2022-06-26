@@ -6,6 +6,9 @@ import com.di.types.{Hunger, PollutionLevel, Rarity}
 class DeadToadAgeUpdateException(ex: String) extends Exception(ex)
 class NonCannibalException(ex: String) extends Exception(ex)
 
+/**
+ * Basic toads trait. Any toad provided should implement this behavior
+ */
 trait Toad {
   val id: String
   val farmName: String

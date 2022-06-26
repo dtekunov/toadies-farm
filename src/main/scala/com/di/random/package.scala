@@ -7,6 +7,9 @@ import com.di.types._
 import java.util.UUID
 import scala.util.{Random, Try}
 
+/**
+ * Holds all random-based operations
+ */
 package object random {
   private val random = new Random
 
@@ -84,6 +87,9 @@ package object random {
     toad
   }
 
+  /**
+   * Calculates the number of tadpoles that will be born from a given pregnant mother
+   */
   def numberOfTadpolesBorn(pregnantToad: PregnantToad): Int = {
     val BASE = 10
 
@@ -131,6 +137,9 @@ package object random {
     result
   }
 
+  /**
+   * Generates new tadpole based on its parents characteristics
+   */
   def generateTadPoleByParent(pregnantToad: PregnantToad): Tadpole = {
     val tadpoleBreed = if (Random.nextBoolean()) pregnantToad.breed else pregnantToad.fatherBreed
 
